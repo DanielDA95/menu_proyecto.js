@@ -12,27 +12,45 @@ const menus = {
         ]
     },
     almuerzo: {
+        entrantes: [
+            { nombre: "Sopa de verduras", precio: 3 },
+            { nombre: "Ensalada mixta", precio: 2.5 }
+        ],
         principal: [
             { nombre: "Bandeja paisa", precio: 11.50 },
             { nombre: "Ajiaco", precio: 8.90 },
             { nombre: "Lechona", precio: 8.60 }
         ],
-        acompañamientos: [
-            { nombre: "Papas fritas", precio: 3 },
-            { nombre: "Arepa", precio: 2 },
-            { nombre: "Mazamorra", precio: 3.5 }
+        segundos: [
+            { nombre: "Chuleta de cerdo", precio: 5 },
+            { nombre: "Pechuga de pollo", precio: 4.5 },
+            { nombre: "Pescado frito", precio: 6 }
+        ],
+        postres: [
+            { nombre: "Flan", precio: 3 },
+            { nombre: "Fruta", precio: 2 },
+            { nombre: "Helado", precio: 2.5 }
         ]
     },
     cena: {
+        entrantes: [
+            { nombre: "Crema de champiñones", precio: 3.5 },
+            { nombre: "Ensalada César", precio: 3 }
+        ],
         principal: [
             { nombre: "Hamburguesa", precio: 12 },
             { nombre: "Salchipapa", precio: 9 },
             { nombre: "Ensalada César", precio: 9.50 }
         ],
-        acompañamientos: [
-            { nombre: "Papas fritas", precio: 4 },
-            { nombre: "Ensalada", precio: 3.5 },
-            { nombre: "Salsa de ébano", precio: 3.5 }
+        segundos: [
+            { nombre: "Pizza", precio: 7 },
+            { nombre: "Pasta", precio: 6.5 },
+            { nombre: "Tacos", precio: 6 }
+        ],
+        postres: [
+            { nombre: "Cheesecake", precio: 3.5 },
+            { nombre: "Brownie", precio: 3 },
+            { nombre: "Yogur con frutas", precio: 2.5 }
         ]
     }
 };
@@ -50,83 +68,132 @@ function obtenerComentarioAleatorio() {
     return comentarios[indice];
 }
 
-function mostrarMenu(menu) {
-    let menuTexto = "Menú principal:\n";
-    menu.principal.forEach((item, index) => menuTexto += `${index + 1}. ${item.nombre} - $${item.precio}\n`);
-    menuTexto += "Acompañamientos:\n";
-    menu.acompañamientos.forEach((item, index) => menuTexto += `${index + 1}. ${item.nombre} - $${item.precio}\n`);
+function mostrarMenu(menu, tipo) {
+    let menuTexto = "Menú:\n";
+    if (tipo === "desayuno") {
+        menuTexto += "Platos principales:\n";
+        menu.principal.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "\nAcompañamientos:\n";
+        menu.acompañamientos.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+    } else {
+        menuTexto += "Entrantes:\n";
+        menu.entrantes.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "\nPlatos principales:\n";
+        menu.principal.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "\nSegundos platos:\n";
+        menu.segundos.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "\nPostres:\n";
+        menu.postres.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+    }
     alert(menuTexto);
 }
 
 function seleccionarOpcion(menu, tipo) {
-    mostrarMenu(menu);
-    
+    mostrarMenu(menu, tipo);
+
     let seleccionPrincipal;
     while (true) {
-        seleccionPrincipal = prompt("Seleccione un plato principal (1, 2, 3): ");
-        if (seleccionPrincipal >= 1 && seleccionPrincipal <= 3) break;
+        let mensaje = "Seleccione un plato principal (escriba el nombre exactamente):\n";
+        menu.principal.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+        seleccionPrincipal = prompt(mensaje);
+        seleccionPrincipal = menu.principal.find(item => item.nombre.toLowerCase() === seleccionPrincipal.toLowerCase());
+        if (seleccionPrincipal) break;
         alert("Selección no válida. Por favor, seleccione una opción válida.");
     }
-    const itemPrincipal = menu.principal[seleccionPrincipal - 1];
-    alert(`${itemPrincipal.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
-    
-    let seleccionAcompañamiento1;
-    while (true) {
-        seleccionAcompañamiento1 = prompt("Seleccione el primer acompañamiento (1, 2, 3): ");
-        if (seleccionAcompañamiento1 >= 1 && seleccionAcompañamiento1 <= 3) break;
-        alert("Selección no válida. Por favor, seleccione una opción válida.");
-    }
-    const itemAcompañamiento1 = menu.acompañamientos[seleccionAcompañamiento1 - 1];
-    alert(`${itemAcompañamiento1.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
-    
-    let seleccionAcompañamiento2;
-    while (true) {
-        seleccionAcompañamiento2 = prompt("Seleccione el segundo acompañamiento (1, 2, 3): ");
-        if (seleccionAcompañamiento2 >= 1 && seleccionAcompañamiento2 <= 3) break;
-        alert("Selección no válida. Por favor, seleccione una opción válida.");
-    }
-    const itemAcompañamiento2 = menu.acompañamientos[seleccionAcompañamiento2 - 1];
-    alert(`${itemAcompañamiento2.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
-    
-    personalizarOpcion(itemPrincipal);
-    personalizarOpcion(itemAcompañamiento1);
-    personalizarOpcion(itemAcompañamiento2);
+    alert(`${seleccionPrincipal.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
 
-    const costoTotal = itemPrincipal.precio + itemAcompañamiento1.precio + itemAcompañamiento2.precio;
-    alert(`El costo total es: $${costoTotal}`);
-}
+    if (tipo === 'desayuno') {
+        let seleccionAcompañamiento;
+        while (true) {
+            let mensaje = "Seleccione un acompañamiento (escriba el nombre exactamente):\n";
+            menu.acompañamientos.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+            seleccionAcompañamiento = prompt(mensaje);
+            seleccionAcompañamiento = menu.acompañamientos.find(item => item.nombre.toLowerCase() === seleccionAcompañamiento.toLowerCase());
+            if (seleccionAcompañamiento) break;
+            alert("Selección no válida. Por favor, seleccione una opción válida.");
+        }
+        alert(`${seleccionAcompañamiento.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
 
-function personalizarOpcion(item) {
-    const personalizaciones = [
-        { nombre: "Jugo de maracuyá", costo: 1 },
-        { nombre: "Sin gluten", costo: 1.50 },
-        { nombre: "Salsa especial de la casa", costo: 1.75 }
-    ];
-    let personalizacionTexto = "Opciones de personalización:\n";
-    personalizaciones.forEach((personalizacion, index) => personalizacionTexto += `${index + 1}. ${personalizacion.nombre} - $${personalizacion.costo}\n`);
-    personalizacionTexto += "0. Ninguna";
-    alert(personalizacionTexto);
-    
-    let seleccionPersonalizacion;
-    while (true) {
-        seleccionPersonalizacion = prompt("Seleccione una personalización (1, 2, 3) o 0 para ninguna: ");
-        if (seleccionPersonalizacion >= 0 && seleccionPersonalizacion <= 3) break;
-        alert("Selección no válida. Por favor, seleccione una opción válida.");
-    }
-    if (seleccionPersonalizacion > 0) {
-        const itemPersonalizacion = personalizaciones[seleccionPersonalizacion - 1];
-        item.precio += itemPersonalizacion.costo;
-        alert(`Personalización ${itemPersonalizacion.nombre} agregada por $${itemPersonalizacion.costo}`);
+        let bebida = prompt("Seleccione una bebida (café, té, zumo natural, bebida gaseosa o agua): ").toLowerCase();
+        let factura = `Factura:\n- ${seleccionPrincipal.nombre}: $${seleccionPrincipal.precio}\n- ${seleccionAcompañamiento.nombre}: $${seleccionAcompañamiento.precio}\n- Bebida: ${bebida} (incluida)\n`;
+        const costoTotal = seleccionPrincipal.precio + seleccionAcompañamiento.precio;
+        factura += `Costo total: $${costoTotal}`;
+        alert(factura);
+    } else {
+        let seleccionEntrante;
+        while (true) {
+            let mensaje = "Seleccione un entrante (escriba el nombre exactamente):\n";
+            menu.entrantes.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+            seleccionEntrante = prompt(mensaje);
+            seleccionEntrante = menu.entrantes.find(item => item.nombre.toLowerCase() === seleccionEntrante.toLowerCase());
+            if (seleccionEntrante) break;
+            alert("Selección no válida. Por favor, seleccione una opción válida.");
+        }
+        alert(`${seleccionEntrante.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+
+        let seleccionSegundo = null;
+        let deseaSegundo = prompt("¿Desea agregar un segundo plato? (sí/no): ").toLowerCase();
+        if (deseaSegundo === 'sí' || deseaSegundo === 'si') {
+            while (true) {
+                let mensaje = "Seleccione un segundo plato (escriba el nombre exactamente):\n";
+                menu.segundos.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+                seleccionSegundo = prompt(mensaje);
+                seleccionSegundo = menu.segundos.find(item => item.nombre.toLowerCase() === seleccionSegundo.toLowerCase());
+                if (seleccionSegundo) break;
+                alert("Selección no válida. Por favor, seleccione una opción válida.");
+            }
+            alert(`${seleccionSegundo.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        }
+
+        let seleccionPostre;
+        while (true) {
+            let mensaje = "Seleccione un postre (escriba el nombre exactamente):\n";
+            menu.postres.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+            seleccionPostre = prompt(mensaje);
+            seleccionPostre = menu.postres.find(item => item.nombre.toLowerCase() === seleccionPostre.toLowerCase());
+            if (seleccionPostre) break;
+            alert("Selección no válida. Por favor, seleccione una opción válida.");
+        }
+        alert(`${seleccionPostre.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+
+        let bebida = prompt("Seleccione una bebida (café, té, zumo natural, bebida gaseosa o agua): ").toLowerCase();
+
+        let factura = `Factura:\n- Entrante: ${seleccionEntrante.nombre} - $${seleccionEntrante.precio}\n- Plato principal: ${seleccionPrincipal.nombre} - $${seleccionPrincipal.precio}\n`;
+        let costoTotal = seleccionEntrante.precio + seleccionPrincipal.precio;
+        if (seleccionSegundo) {
+            factura += `- Segundo plato: ${seleccionSegundo.nombre} - $${seleccionSegundo.precio}\n`;
+            costoTotal += seleccionSegundo.precio;
+        }
+        factura += `- Postre: ${seleccionPostre.nombre} - $${seleccionPostre.precio}\n- Bebida: ${bebida} (incluida)\n`;
+        costoTotal += seleccionPostre.precio;
+        factura += `Costo total: $${costoTotal}`;
+        alert(factura);
     }
 }
 
 function pedircomida() {
-    const tipoMenu = prompt("Seleccione el tipo de menú (desayuno, almuerzo, cena): ").toLowerCase();
-    const menu = menus[tipoMenu];
-    if (!menu) {
-        alert("Tipo de menú no válido.");
+    const hora = prompt("Ingrese la hora del día (formato 24h, por ejemplo, 14:30 para las 2:30 PM): ");
+    const horaValida = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(hora);
+    if (!horaValida) {
+        alert("Por favor, ingrese una hora válida en formato HH:mm (por ejemplo, 14:30 para las 2:30 PM).");
         return;
     }
+
+    const horaInt = parseInt(hora.split(':')[0], 10);
+
+    let tipoMenu;
+    if (horaInt >= 7 && horaInt < 11) {
+        tipoMenu = "desayuno";
+    } else if (horaInt >= 12 && horaInt < 16) {
+        tipoMenu = "almuerzo";
+    } else if (horaInt >= 17 && horaInt <= 22.5) {
+        tipoMenu = "cena";
+    } else {
+        alert("El restaurante está cerrado y no tiene servicio.");
+        return;
+    }
+
+    const menu = menus[tipoMenu];
     seleccionarOpcion(menu, tipoMenu);
 }
 
