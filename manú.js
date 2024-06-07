@@ -75,6 +75,7 @@ function mostrarMenu(menu, tipo) {
         menu.principal.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
         menuTexto += "\nAcompañamientos:\n";
         menu.acompañamientos.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "No agregar acompañamiento\n";
     } else {
         menuTexto += "Entrantes:\n";
         menu.entrantes.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
@@ -82,8 +83,10 @@ function mostrarMenu(menu, tipo) {
         menu.principal.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
         menuTexto += "\nSegundos platos:\n";
         menu.segundos.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "No agregar segundo plato\n";
         menuTexto += "\nPostres:\n";
         menu.postres.forEach((item) => menuTexto += `${item.nombre} - $${item.precio}\n`);
+        menuTexto += "No agregar postre\n";
     }
     alert(menuTexto);
 }
@@ -105,67 +108,106 @@ function seleccionarOpcion(menu, tipo) {
     if (tipo === 'desayuno') {
         let seleccionAcompañamiento;
         while (true) {
-            let mensaje = "Seleccione un acompañamiento (escriba el nombre exactamente):\n";
+            let mensaje = "Seleccione un acompañamiento (escriba el nombre exactamente o 'No agregar acompañamiento'):\n";
             menu.acompañamientos.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+            mensaje += "No agregar acompañamiento\n";
             seleccionAcompañamiento = prompt(mensaje);
+            if (seleccionAcompañamiento.toLowerCase() === "no agregar acompañamiento") {
+                seleccionAcompañamiento = null;
+                break;
+            }
             seleccionAcompañamiento = menu.acompañamientos.find(item => item.nombre.toLowerCase() === seleccionAcompañamiento.toLowerCase());
             if (seleccionAcompañamiento) break;
             alert("Selección no válida. Por favor, seleccione una opción válida.");
         }
-        alert(`${seleccionAcompañamiento.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        if (seleccionAcompañamiento) {
+            alert(`${seleccionAcompañamiento.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        }
 
         let bebida = prompt("Seleccione una bebida (café, té, zumo natural, bebida gaseosa o agua): ").toLowerCase();
-        let factura = `Factura:\n- ${seleccionPrincipal.nombre}: $${seleccionPrincipal.precio}\n- ${seleccionAcompañamiento.nombre}: $${seleccionAcompañamiento.precio}\n- Bebida: ${bebida} (incluida)\n`;
-        const costoTotal = seleccionPrincipal.precio + seleccionAcompañamiento.precio;
+        let factura = `Factura:\n- ${seleccionPrincipal.nombre}: $${seleccionPrincipal.precio}\n`;
+        if (seleccionAcompañamiento) {
+            factura += `- ${seleccionAcompañamiento.nombre}: $${seleccionAcompañamiento.precio}\n`;
+        }
+        factura += `- Bebida: ${bebida} (incluida)\n`;
+        const costoTotal = seleccionPrincipal.precio + (seleccionAcompañamiento ? seleccionAcompañamiento.precio : 0);
         factura += `Costo total: $${costoTotal}`;
         alert(factura);
     } else {
         let seleccionEntrante;
         while (true) {
-            let mensaje = "Seleccione un entrante (escriba el nombre exactamente):\n";
+            let mensaje = "Seleccione un entrante (escriba el nombre exactamente o 'No agregar entrante'):\n";
             menu.entrantes.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+            mensaje += "No agregar entrante\n";
             seleccionEntrante = prompt(mensaje);
+            if (seleccionEntrante.toLowerCase() === "no agregar entrante") {
+                seleccionEntrante = null;
+                break;
+            }
             seleccionEntrante = menu.entrantes.find(item => item.nombre.toLowerCase() === seleccionEntrante.toLowerCase());
             if (seleccionEntrante) break;
             alert("Selección no válida. Por favor, seleccione una opción válida.");
         }
-        alert(`${seleccionEntrante.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        if (seleccionEntrante) {
+            alert(`${seleccionEntrante.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        }
 
         let seleccionSegundo = null;
         let deseaSegundo = prompt("¿Desea agregar un segundo plato? (sí/no): ").toLowerCase();
         if (deseaSegundo === 'sí' || deseaSegundo === 'si') {
             while (true) {
-                let mensaje = "Seleccione un segundo plato (escriba el nombre exactamente):\n";
+                let mensaje = "Seleccione un segundo plato (escriba el nombre exactamente o 'No agregar segundo plato'):\n";
                 menu.segundos.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+                mensaje += "No agregar segundo plato\n";
                 seleccionSegundo = prompt(mensaje);
+                if (seleccionSegundo.toLowerCase() === "no agregar segundo plato") {
+                    seleccionSegundo = null;
+                    break;
+                }
                 seleccionSegundo = menu.segundos.find(item => item.nombre.toLowerCase() === seleccionSegundo.toLowerCase());
                 if (seleccionSegundo) break;
                 alert("Selección no válida. Por favor, seleccione una opción válida.");
             }
-            alert(`${seleccionSegundo.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+            if (seleccionSegundo) {
+                alert(`${seleccionSegundo.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+            }
         }
 
         let seleccionPostre;
         while (true) {
-            let mensaje = "Seleccione un postre (escriba el nombre exactamente):\n";
+            let mensaje = "Seleccione un postre (escriba el nombre exactamente o 'No agregar postre'):\n";
             menu.postres.forEach((item) => mensaje += `${item.nombre} - $${item.precio}\n`);
+            mensaje += "No agregar postre\n";
             seleccionPostre = prompt(mensaje);
+            if (seleccionPostre.toLowerCase() === "no agregar postre") {
+                seleccionPostre = null;
+                break;
+            }
             seleccionPostre = menu.postres.find(item => item.nombre.toLowerCase() === seleccionPostre.toLowerCase());
             if (seleccionPostre) break;
             alert("Selección no válida. Por favor, seleccione una opción válida.");
         }
-        alert(`${seleccionPostre.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        if (seleccionPostre) {
+            alert(`${seleccionPostre.nombre} seleccionado. ${obtenerComentarioAleatorio()}`);
+        }
 
         let bebida = prompt("Seleccione una bebida (café, té, zumo natural, bebida gaseosa o agua): ").toLowerCase();
 
-        let factura = `Factura:\n- Entrante: ${seleccionEntrante.nombre} - $${seleccionEntrante.precio}\n- Plato principal: ${seleccionPrincipal.nombre} - $${seleccionPrincipal.precio}\n`;
-        let costoTotal = seleccionEntrante.precio + seleccionPrincipal.precio;
+        let factura = `Factura:\n`;
+        if (seleccionEntrante) {
+            factura += `- Entrante: ${seleccionEntrante.nombre} - $${seleccionEntrante.precio}\n`;
+        }
+        factura += `- Plato principal: ${seleccionPrincipal.nombre} - $${seleccionPrincipal.precio}\n`;
+        let costoTotal = (seleccionEntrante ? seleccionEntrante.precio : 0) + seleccionPrincipal.precio;
         if (seleccionSegundo) {
             factura += `- Segundo plato: ${seleccionSegundo.nombre} - $${seleccionSegundo.precio}\n`;
             costoTotal += seleccionSegundo.precio;
         }
-        factura += `- Postre: ${seleccionPostre.nombre} - $${seleccionPostre.precio}\n- Bebida: ${bebida} (incluida)\n`;
-        costoTotal += seleccionPostre.precio;
+        if (seleccionPostre) {
+            factura += `- Postre: ${seleccionPostre.nombre} - $${seleccionPostre.precio}\n`;
+            costoTotal += seleccionPostre.precio;
+        }
+        factura += `- Bebida: ${bebida} (incluida)\n`;
         factura += `Costo total: $${costoTotal}`;
         alert(factura);
     }
@@ -192,7 +234,7 @@ function pedircomida() {
         alert("El restaurante está cerrado y no tiene servicio.");
         return;
     }
-
+alert(`El menú disponible para esta hora es: ${tipoMenu.charAt(0).toUpperCase() + tipoMenu.slice(1)}`);
     const menu = menus[tipoMenu];
     seleccionarOpcion(menu, tipoMenu);
 }
